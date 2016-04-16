@@ -16,6 +16,37 @@ create table Supplier(
 	State				nvarchar(10) not null
 );
 
+
+create table Medicine(
+	Medince_ID 			nvarchar(20) not null primary key,
+	Name 				nvarchar(50) not null,
+	Supplier_ID 		nvarchar(20) not null foreign key(Supplier_ID) references Supplier(Supplier_ID),
+	Price 				money not null check(Price >= 0),
+	Quantities			int not null,
+	Description 		text
+);
+
+create table Department(
+	Department_ID		nvarchar(20) not null primary key,
+	Name 				nvarchar(50) not null
+);
+
+
+create table Insurance(
+	Insurance_ID 		nvarchar(20) not null primary key,
+	Name 				nvarchar(50) not null,
+	Total 				money not null check(Total > 0),
+	Date 				date not null,
+	Description 		text
+);
+
+create table Bed(
+	Bed_ID 				nvarchar(20) not null primary key,
+	Building 			nvarchar(50) not null,
+	Floor 				int not null,
+	Used 				bit
+);
+
 create table Doctor(
 	Doctor_ID			nvarchar(20) not null primary key,
 	FirstName 			nvarchar(30) not null,
@@ -42,6 +73,7 @@ create table Nurse(
 	reportTo			nvarchar(20) not null
 );
 
+
 create table Patient(
 	Patient_ID			nvarchar(20) not null primary key,
 	FirstName 			nvarchar(30) not null,
@@ -58,7 +90,7 @@ create table Patient(
 
 create table Bill(
 	Bill_ID				nvarchar(20) not null primary key,
-	Patient_ID 			nvarchar(20) not null foreign key(Patient) references Patient(Patient_ID)
+	Patient_ID 			nvarchar(20) not null foreign key(Patient_ID) references Patient(Patient_ID),
 	BillTotal 			money,
 	PaymentTotal		money,
 	InsuranceTotal		money,
@@ -92,34 +124,13 @@ create table TreatmentTeam(
 create table MedicineUseRecord(
 	MUR_ID				nvarchar(20) not null primary key,
 	Medince_ID 			nvarchar(20) not null foreign key(Medince_ID) references Medicine(Medince_ID),
-	Doctor_ID			nvarchar(20) not null foreign key(Doctor_ID) references Doctor_ID(Doctor_ID),
+	Doctor_ID			nvarchar(20) not null foreign key(Doctor_ID) references Doctor(Doctor_ID),
 	Nurse_ID 			nvarchar(20) not null foreign key(Nurse_ID) references Nurse(Nurse_ID),
 	Quantities			int not null check(Quantities > 0),
 	Patient_ID			nvarchar(20) not null foreign key(Patient_ID) references Patient(Patient_ID),
 	UsedDate			date not null
 );
 
-create table Department(
-	Department_ID		nvarchar(20) not null primary key,
-	Name 				nvarchar(50) not null
-);
-
-create table Medicine(
-	Medince_ID 			nvarchar(20) not null primary key,
-	Name 				nvarchar(50) not null,
-	Supplier_ID 		nvarchar(20) not null foreign key(Supplier_ID) references Supplier(Supplier_ID),
-	Price 				money not null check(Price >= 0),
-	Quantities			int not null,
-	Description 		text
-);
-
-create table Insurance(
-	Insurance_ID 		nvarchar(20) not null primary key,
-	Name 				nvarchar(50) not null,
-	Total 				money not null check(Total > 0),
-	Date 				date not null,
-	Description 		text
-);
 
 create table Health_Attribute(
 	Health_ID 			nvarchar(20) not null primary key,
@@ -146,9 +157,3 @@ create table NurseSchedule(
 	Bed_ID 				nvarchar(20) foreign key(Bed_ID) references Bed(Bed_ID)
 );
 
-create table Bed(
-	Bed_ID 				nvarchar(20) not null primary key,
-	Building 			nvarchar(50) not null,
-	Floor 				int not null,
-	Used 				boolean
-);
